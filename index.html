@@ -1,0 +1,39 @@
+ <canvas id="gopher" width="112" height="112" style="position: fixed; bottom: 0; right: 0; z-index: 1000;"></canvas>
+  <script>
+
+    var mousepos = {"x": 0, "y": 0}
+
+    var canvas = document.getElementById("gopher");
+    var ctx = canvas.getContext("2d");
+    var gopherimage = new Image();
+    gopherimage.src = 'gopher.png';
+    var eyeballimage = new Image();
+    eyeballimage.src = 'eyeball.png';
+    document.addEventListener("mousemove", mousemove, false);
+    eyeballs = [
+      {"x": 29, "y": 38},
+      {"x": 85, "y": 38}
+    ]
+    setInterval(function() {
+      var rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0,0,canvas.width,canvas.height)
+      ctx.drawImage(gopherimage, 0, 0);
+      for (var i = 0; i < eyeballs.length; i++) {
+        mouseX = mousepos["x"] - rect.left;
+        mouseY = mousepos["y"] - rect.top;
+        if (Math.abs(eyeballs[i]["x"] - mouseX) < 10 && Math.abs(eyeballs[i]["y"] - mouseY) < 10) {
+          ctx.drawImage(eyeballimage, mouseX - 6, mouseY - 6)
+        } else {
+          angle = Math.atan2(eyeballs[i]["y"] - mouseY,eyeballs[i]["x"] - mouseX)
+          x = Math.cos(angle) * 10;
+          y = Math.sin(angle) * 10;
+          ctx.drawImage(eyeballimage, eyeballs[i]["x"] - 6 - x, eyeballs[i]["y"] - 6 - y)
+        }
+      }
+    }, 16)
+
+    function mousemove(event) {
+      mousepos["x"] = event["clientX"]
+      mousepos["y"] = event["clientY"]
+    }
+  </script>
